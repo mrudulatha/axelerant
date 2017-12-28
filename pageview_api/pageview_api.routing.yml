@@ -1,0 +1,7 @@
+pageview_api.view:
+  path: '/page_json/{apikey}/{nid}'
+  defaults:
+    _controller: '\Drupal\pageview_api\Controller\PageViewApiController::viewPageResource'
+    _title: 'View Page Content'
+  requirements:
+    _permission: 'access content'

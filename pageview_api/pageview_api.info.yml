@@ -1,0 +1,7 @@
+name: Page View API
+description: Expose page resources using API
+package: Custom Modules
+type: module
+core: 8.x
+dependencies:
+  - serialization

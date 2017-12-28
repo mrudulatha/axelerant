@@ -1,0 +1,16 @@
+<?php
+
+/**
+ * @file
+ * Uninstall function for the Page View API module.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function pageview_api_uninstall() {
+  // Reset siteapikey config.
+  \Drupal::configFactory()->getEditable('system.site')
+    ->set('siteapikey', '')
+    ->save();
+}

@@ -1,0 +1,45 @@
+<?php
+
+/**
+ * @file
+ * Module implementing modifications to Site Information Configuration form.
+ */
+
+/**
+ * Implements hook_form_alter().
+ */
+function pageview_api_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id){
+
+  if($form_id == 'system_site_information_settings') {
+  
+    // Load site configuration.
+    $api_key = (\Drupal::configFactory()->getEditable('system.site')->get('siteapikey') != '') ? \Drupal::configFactory()->getEditable('system.site')->get('siteapikey') : 'No API Key yet';
+
+    // Added site api key to site information.
+    $form['site_information']['site_api_key'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Site API Key'),
+      '#description' => t('Set an API key for accessing the content page of the site.'),
+      '#default_value' => $api_key,
+    );
+
+    // Modify site configuration submit button value.
+    $form['actions']['submit']['#value'] = t('Update Configuration');
+
+    // Added custom submit handler to save API key in site configuration.
+    $form['#submit'][] = 'pageview_api_save_api_key';
+  }
+}
+
+/**
+ * Submit handler to save API key in site configuration.
+ */
+function pageview_api_save_api_key(array &$form, \Drupal\Core\Form\FormStateInterface $form_state) {
+  $api_key = $form_state->getValue('site_api_key');
+  if (!empty($api_key) && $api_key != 'No API Key yet') {
+    \Drupal::configFactory()->getEditable('system.site')
+        ->set('siteapikey', $form_state->getValue('site_api_key'))
+        ->save();
+    drupal_set_message(t('Site API Key has been saved successfully : @api_key', array('@api_key' => $api_key)));
+  }
+}
